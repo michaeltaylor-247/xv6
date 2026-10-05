@@ -43,9 +43,44 @@ We don't process error reports (see note on top of this file).
 
 BUILDING AND RUNNING XV6
 
-To build xv6 on an x86 ELF machine (like Linux or FreeBSD), run
-"make". On non-x86 or non-ELF machines (like OS X, even on x86), you
-will need to install a cross-compiler gcc suite capable of producing
-x86 ELF binaries (see https://pdos.csail.mit.edu/6.828/).
-Then run "make TOOLPREFIX=i386-jos-elf-". Now install the QEMU PC
-simulator and run "make qemu".
+Run "make" to build the kernel, user programs, and disk images. The
+Makefile defaults to the i686-elf- cross toolchain used for Mac development.
+Override it with "make TOOLPREFIX=..." as needed; use TOOLPREFIX= for a
+compatible native x86 ELF toolchain. HOSTCC selects the host compiler for mkfs.
+
+Run "make qemu" for a graphical emulator or "make qemu-nox" for a terminal.
+For debugging, run "make qemu-nox-gdb", then follow its GDB command from the
+repository root. "make qemu-memfs" uses an in-memory filesystem.
+
+LAYOUT
+
+src/boot/       BIOS bootloader
+src/kernel/     Kernel sources, internal headers, and linker script
+src/user/       User programs, syscall stubs, and user library
+src/include/    Shared kernel/user/host headers
+tools/         Host utilities and build/debugging helpers
+config/         GDB template and Bochs configuration
+docs/           Upstream notes and legacy source-printing support
+build/          All generated artifacts (ignored by Git)
+
+The linked kernel is build/kernel.elf; objects live in build/kernel/,
+build/user/, and build/boot/. Disk images live directly under build/.
+"make clean" removes build/. "make print" stages a flat source copy under
+build/printing/ for the upstream printing scripts (requires their original
+printing dependencies). "make dist" creates a source copy in build/dist/;
+"make dist-test" builds that copy, and "make tar" archives it.
+
+Run "make format" or "make format-check" for C sources and headers. If
+clang-format is not on PATH, set CLANG_FORMAT to its executable path, e.g.
+"make format CLANG_FORMAT=/opt/homebrew/opt/llvm/bin/clang-format".
+Include sorting is disabled because xv6 headers depend on include order.
+
+BRANCHES
+
+upstream preserves the original xv6 state. main contains the course baseline.
+Create independent assignment branches from main, for example:
+
+    git switch -c assignment/01 main
+
+Keep assignment solutions out of main. Pin a semester baseline with a tag
+when needed, so each assignment can start from the same revision.
