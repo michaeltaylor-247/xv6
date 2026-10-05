@@ -1,4 +1,3 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
-# xv6 headers depend on the original include order.
 SortIncludes: Never

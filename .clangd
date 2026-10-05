@@ -1,0 +1,17 @@
+CompileFlags:
+  Add:
+    - -xc
+    - -I/Users/michael/tamu/senior/csce410/xv6/src/include
+    - -I/Users/michael/tamu/senior/csce410/xv6/src/kernel
+    - -I/Users/michael/tamu/senior/csce410/xv6/src/user
+  Remove: 
+    - -std=c++20
+    - -std=c++*]
+---
+If:
+  PathMatch: src/.*
+CompileFlags:
+  Add:
+    - --target=i686-unknown-none-elf
+    - -ffreestanding
+    - -fno-builtin
